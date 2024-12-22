@@ -12,8 +12,9 @@ jobs:
         - name: Get Info
           run: |
             sudo apt-get install jq -y &> /dev/null
-            echo "PR_TITLE=$(jq --raw-output .pull_request.title ${GITHUB_EVENT_PATH})" >> ${GITHUB_ENV}
+            echo "PR_TITLE=$(jq --raw-output .pull_request.title ${GITHUB_EVENT_PATH} | sed 's/\\/\\\\/g; s/_/\\_/g; s/*/\\*/g; s/\\[/\\[/g; s/\\]/\\]/g; s/\\`/\\`/g')" >> ${GITHUB_ENV}
             echo "PR_URL=$(jq --raw-output .pull_request.html_url ${GITHUB_EVENT_PATH})" >> ${GITHUB_ENV}
+
         - name: Notify in Telegram
           run: |
             TgNotify() {
